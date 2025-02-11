@@ -1,4 +1,4 @@
-import { ShoppingCartIcon, User2Icon } from "lucide-react";
+import { ShoppingCartIcon } from "lucide-react";
 import Link from "next/link";
 
 

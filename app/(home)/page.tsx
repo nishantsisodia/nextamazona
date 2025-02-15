@@ -4,8 +4,8 @@ import data from '@/lib/data'
 
 const page = async () => {
   return (
-   <HomeCarousel items={data.carousals}/>
- 
+   <HomeCarousel items={data.carousels}/>
+
 
   )
 }

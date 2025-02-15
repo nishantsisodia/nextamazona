@@ -1,10 +1,12 @@
 import React from 'react'
+import HomeCarousel from '@/components/shared/home/home-carousel'
+import data from '@/lib/data'
 
-const page = () => {
+const page = async () => {
   return (
-    <div className='h1-bold text-center p-10'>
-      Your Home Page
-    </div>
+   <HomeCarousel items={data.carousals}/>
+ 
+
   )
 }
 

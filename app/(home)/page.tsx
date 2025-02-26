@@ -81,13 +81,15 @@ const page = async () => {
         </Card>
         <Card className="w-full rounded-none">
           <CardContent className="p-4 items-center gap-3">
-            <ProductSlider title="Best Selling Products" products={bestSellingProducts} />
+            <ProductSlider
+              title="Best Selling Products"
+              products={bestSellingProducts}
+            />
           </CardContent>
         </Card>
       </div>
       <div className="p-4 bg-background">
-        <BrowsingHistoryList/>
-
+        <BrowsingHistoryList />
       </div>
     </>
   );

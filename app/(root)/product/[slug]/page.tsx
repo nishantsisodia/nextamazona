@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import {
   getProductsBySlug,
@@ -12,15 +11,17 @@ import ProductSlider from "@/components/shared/product/product-slider";
 import Rating from "@/components/shared/product/rating";
 import BrowsingHistoryList from "@/components/shared/browsing-history-list";
 import AddToBrowsingHistory from "@/components/shared/product/add-to-browsing-history";
+import AddToCart from "@/components/shared/product/add-to-cart";
+import { generateId, round2 } from "@/lib/utils";
 
 export async function generateMetadata(props: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }) {
   const params = await props.params;
   const product = await getProductsBySlug(params.slug);
 
   if (!product) {
-    return { title: "Product not found" }
+    return { title: "Product not found" };
   }
 
   return {
@@ -30,7 +31,7 @@ export async function generateMetadata(props: {
 }
 
 export default async function ProductDetails(props: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
   searchParams: Promise<{ page: string; color: string; size: string }>;
 }) {
   const searchParams = await props.searchParams;
@@ -47,7 +48,7 @@ export default async function ProductDetails(props: {
 
   return (
     <div>
-      <AddToBrowsingHistory id={product._id} category={product.category}/>
+      <AddToBrowsingHistory id={product._id} category={product.category} />
       <section>
         <div className="grid grid-cols-1 md:grid-cols-5 ">
           <div className="col-span-2">
@@ -103,8 +104,28 @@ export default async function ProductDetails(props: {
                 )}
                 {product.countInStock !== 0 ? (
                   <div className="text-green-700 text-xl">In Stock</div>
-                ):(
+                ) : (
                   <div className="text-destructive text-xl">Out of Stock</div>
+                )}
+
+                {product.countInStock !== 0 && (
+                  <div className=" flex justify-center items-center">
+                    <AddToCart
+                      item={{
+                        clientId: generateId(),
+                        product: product._id,
+                        countInStock: product.countInStock,
+                        name: product.name,
+                        slug: product.slug,
+                        category: product.category,
+                        price: round2(product.price),
+                        quantity: 1,
+                        image: product.images[0],
+                        size: size || product.sizes[0],
+                        color: color || product.colors[0],
+                      }}
+                    />
+                  </div>
                 )}
               </CardContent>
             </Card>
@@ -112,13 +133,13 @@ export default async function ProductDetails(props: {
         </div>
       </section>
       <section className="mt-10">
-        <ProductSlider products={relatedProduct.data}
-        title={`Best Sellers in ${product.category}`}
-
+        <ProductSlider
+          products={relatedProduct.data}
+          title={`Best Sellers in ${product.category}`}
         />
       </section>
       <section>
-        <BrowsingHistoryList className="mt-10"/>
+        <BrowsingHistoryList className="mt-10" />
       </section>
     </div>
   );

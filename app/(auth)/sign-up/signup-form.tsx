@@ -53,7 +53,11 @@ export default function SignUpForm() {
       const res = await registerUser(data)
       if (!res.success) {
         toast.error("Error", {
-          description: res.error
+          description: res.error,
+          style: {
+            backgroundColor: "#DC2626", // Red background
+            color: "#fff", // White text
+          },
         })
         return
       }
@@ -67,7 +71,11 @@ export default function SignUpForm() {
         throw error
       }
       toast.error("Error", {
-        description: 'invalid email and password'
+        description: 'invalid email and password',
+        style: {
+            backgroundColor: "#DC2626", // Red background
+            color: "#fff", // White text
+          },
       })
     }
   }

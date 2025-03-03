@@ -55,7 +55,11 @@ export default function CredentialsSignInForm() {
         throw error
       }
       toast.error("Error", {
-       description: 'Invalid email or password'
+       description: 'Invalid email or password',
+       style: {
+        backgroundColor: "#DC2626", // Red background
+        color: "#fff", // White text
+      },
       });
     }
   }

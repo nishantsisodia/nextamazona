@@ -1,9 +1,9 @@
-'use client'
-import { redirect, useSearchParams } from 'next/navigation'
+"use client";
+import { redirect, useSearchParams } from "next/navigation";
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import {
   Form,
   FormControl,
@@ -11,46 +11,49 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { IUserSignUp } from '@/types'
-import { registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { UserSignUpSchema } from '@/lib/validator'
-import { Separator } from '@/components/ui/separator'
-import { isRedirectError } from 'next/dist/client/components/redirect-error'
-import { APP_NAME } from '@/lib/constants'
-import { toast } from 'sonner'
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { IUserSignUp } from "@/types";
+import {
+  registerUser,
+  signInWithCredentials,
+} from "@/lib/actions/user.actions";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UserSignUpSchema } from "@/lib/validator";
+import { Separator } from "@/components/ui/separator";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { APP_NAME } from "@/lib/constants";
+import { toast } from "sonner";
 
 const signUpDefaultValues =
-  process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === "development"
     ? {
-        name: 'john doe',
-        email: 'john@me.com',
-        password: '123456',
-        confirmPassword: '123456',
+        name: "john doe",
+        email: "john@me.com",
+        password: "123456",
+        confirmPassword: "123456",
       }
     : {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      }
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      };
 
 export default function SignUpForm() {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
     defaultValues: signUpDefaultValues,
-  })
+  });
 
-  const { control, handleSubmit } = form
+  const { control, handleSubmit } = form;
 
   const onSubmit = async (data: IUserSignUp) => {
     try {
-      const res = await registerUser(data)
+      const res = await registerUser(data);
       if (!res.success) {
         toast.error("Error", {
           description: res.error,
@@ -58,41 +61,41 @@ export default function SignUpForm() {
             backgroundColor: "#DC2626", // Red background
             color: "#fff", // White text
           },
-        })
-        return
+        });
+        return;
       }
       await signInWithCredentials({
         email: data.email,
         password: data.password,
-      })
-      redirect(callbackUrl)
+      });
+      redirect(callbackUrl);
     } catch (error) {
       if (isRedirectError(error)) {
-        throw error
+        throw error;
       }
       toast.error("Error", {
-        description: 'invalid email and password',
+        description: "invalid email and password",
         style: {
-            backgroundColor: "#DC2626", // Red background
-            color: "#fff", // White text
-          },
-      })
+          backgroundColor: "#DC2626", // Red background
+          color: "#fff", // White text
+        },
+      });
     }
-  }
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type='hidden' name='callbackUrl' value={callbackUrl} />
-        <div className='space-y-6'>
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
+        <div className="space-y-6">
           <FormField
             control={control}
-            name='name'
+            name="name"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter name address' {...field} />
+                  <Input placeholder="Enter name address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -101,12 +104,12 @@ export default function SignUpForm() {
 
           <FormField
             control={control}
-            name='email'
+            name="email"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter email address' {...field} />
+                  <Input placeholder="Enter email address" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,14 +118,14 @@ export default function SignUpForm() {
 
           <FormField
             control={control}
-            name='password'
+            name="password"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    type='password'
-                    placeholder='Enter password'
+                    type="password"
+                    placeholder="Enter password"
                     {...field}
                   />
                 </FormControl>
@@ -132,14 +135,14 @@ export default function SignUpForm() {
           />
           <FormField
             control={control}
-            name='confirmPassword'
+            name="confirmPassword"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
-                    type='password'
-                    placeholder='Confirm Password'
+                    type="password"
+                    placeholder="Confirm Password"
                     {...field}
                   />
                 </FormControl>
@@ -148,22 +151,22 @@ export default function SignUpForm() {
             )}
           />
           <div>
-            <Button type='submit'>Sign Up</Button>
+            <Button type="submit">Sign Up</Button>
           </div>
-          <div className='text-sm'>
-            By creating an account, you agree to {APP_NAME}&apos;s{' '}
-            <Link href='/page/conditions-of-use'>Conditions of Use</Link> and{' '}
-            <Link href='/page/privacy-policy'> Privacy Notice. </Link>
+          <div className="text-sm">
+            By creating an account, you agree to {APP_NAME}&apos;s{" "}
+            <Link href="/page/conditions-of-use">Conditions of Use</Link> and{" "}
+            <Link href="/page/privacy-policy"> Privacy Notice. </Link>
           </div>
-          <Separator className='mb-4' />
-          <div className='text-sm'>
-            Already have an account?{' '}
-            <Link className='link' href={`/sign-in?callbackUrl=${callbackUrl}`}>
+          <Separator className="mb-4" />
+          <div className="text-sm">
+            Already have an account?{" "}
+            <Link className="link" href={`/sign-in?callbackUrl=${callbackUrl}`}>
               Sign In
             </Link>
           </div>
         </div>
       </form>
     </Form>
-  )
+  );
 }

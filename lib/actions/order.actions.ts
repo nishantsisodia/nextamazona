@@ -38,5 +38,15 @@ export const calcDeliveryDateAndPrice = async ({
       (taxPrice ? round2(taxPrice) : 0)
   );
 
-  return { itemsPrice, shippingPrice, taxPrice, totalPrice };
+  return {
+    AVAILABLE_DELIVERY_DATES,
+    deliveryDateIndex:
+      deliveryDateIndex === undefined
+        ? AVAILABLE_DELIVERY_DATES.length - 1
+        : deliveryDateIndex,
+    itemsPrice,
+    shippingPrice,
+    taxPrice,
+    totalPrice,
+  };
 };

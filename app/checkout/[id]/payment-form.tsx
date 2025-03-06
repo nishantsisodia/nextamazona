@@ -17,12 +17,15 @@ import CheckoutFooter from "../checkout-footer";
 import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import ProductPrice from "@/components/shared/product/product-price";
-import { toast } from "sonner";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
 import StripeForm from "./stripe-form";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { toast } from "sonner";
 
-export default function OrderPaymentForm({
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+);
+export default function OrderDetailsForm({
   order,
   paypalClientId,
   clientSecret,
@@ -63,30 +66,17 @@ export default function OrderPaymentForm({
     if (!res.success)
       return toast.error(res.message, {
         style: {
-          backgroundColor: "#DC2626", // Red background
-          color: "#fff", // White text
+          backgroundColor: "red",
+          color: "white",
         },
       });
     return res.data;
   };
   const handleApprovePayPalOrder = async (data: { orderID: string }) => {
     const res = await approvePayPalOrder(order._id, data);
-
-    if (res.success) {
-      toast.success(res.message, {
-        style: {
-          backgroundColor: "green", // Red background
-          color: "#fff", // White text
-        },
-      });
-    } else {
-      toast.error(res.message, {
-        style: {
-          backgroundColor: "#DC2626", // Red background
-          color: "#fff", // White text
-        },
-      });
-    }
+    toast(res.message, {
+      description: res.message,
+    });
   };
 
   const CheckoutSummary = () => (
@@ -143,7 +133,6 @@ export default function OrderPaymentForm({
                 </PayPalScriptProvider>
               </div>
             )}
-
             {!isPaid && paymentMethod === "Stripe" && clientSecret && (
               <Elements
                 options={{
@@ -170,10 +159,6 @@ export default function OrderPaymentForm({
         </div>
       </CardContent>
     </Card>
-  );
-
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
   );
 
   return (

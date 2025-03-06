@@ -39,9 +39,19 @@ export default function AddToCart({
           });
         } catch (error) {
           if (error instanceof Error) {
-            toast.error(error.message);
+            toast.error(error.message, {
+              style: {
+                backgroundColor: "#DC2626", // Red background
+                color: "#fff", // White text
+              },
+            });
           } else {
-            toast.error("Something went wrong");
+            toast.error("Something went wrong", {
+              style: {
+                backgroundColor: "#DC2626", // Red background
+                color: "#fff", // White text
+              },
+            });
           }
         }
       }}
@@ -75,9 +85,19 @@ export default function AddToCart({
             router.push(`/cart/${itemId}`);
           } catch (error) {
             if (error instanceof Error) {
-              toast.error(error.message);
+              toast.error(error.message, {
+                style: {
+                  backgroundColor: "#DC2626", // Red background
+                  color: "#fff", // White text
+                },
+              });
             } else {
-              toast.error("Something went wrong");
+              toast.error("Something went wrong", {
+                style: {
+                  backgroundColor: "#DC2626", // Red background
+                  color: "#fff", // White text
+                },
+              });
             }
           }
         }}
@@ -93,9 +113,19 @@ export default function AddToCart({
             router.push(`/checkout`);
           } catch (error) {
             if (error instanceof Error) {
-              toast.error(error.message);
+              toast.error(error.message, {
+                style: {
+                  backgroundColor: "#DC2626", // Red background
+                  color: "#fff", // White text
+                },
+              });
             } else {
-              toast.error("Something went wrong");
+              toast.error("Something went wrong", {
+                style: {
+                  backgroundColor: "#DC2626", // Red background
+                  color: "#fff", // White text
+                },
+              });
             }
           }
         }}

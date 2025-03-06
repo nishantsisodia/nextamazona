@@ -132,11 +132,17 @@ const CheckoutForm = () => {
     })
     if (!res.success) {
       toast.error(res.message,{
-        description: res.message,
+        style: {
+          backgroundColor: "#DC2626", // Red background
+          color: "#fff", // White text
+        },
       })
     } else {
       toast.success(res.message ,{
-        description: res.message,
+        style: {
+          backgroundColor: "green", // Red background
+          color: "#fff", // White text
+        },
       })
       clearCart()
       router.push(`/checkout/${res.data?.orderId}`)

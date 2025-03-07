@@ -22,19 +22,22 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "sonner";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-);
+
 export default function OrderDetailsForm({
   order,
   paypalClientId,
   clientSecret,
 }: {
-  order: IOrder;
-  paypalClientId: string;
-  isAdmin: boolean;
-  clientSecret: string | null;
+  order: IOrder
+  paypalClientId: string
+  isAdmin: boolean
+  clientSecret: string | null
 }) {
+
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+  )
+
   const router = useRouter();
   const {
     shippingAddress,
@@ -47,6 +50,9 @@ export default function OrderDetailsForm({
     expectedDeliveryDate,
     isPaid,
   } = order;
+
+
+
 
   if (isPaid) {
     redirect(`/account/orders/${order._id}`);
@@ -133,7 +139,7 @@ export default function OrderDetailsForm({
                 </PayPalScriptProvider>
               </div>
             )}
-            {!isPaid && paymentMethod === "Stripe" && clientSecret && (
+                {!isPaid && paymentMethod === 'Stripe' && clientSecret && (
               <Elements
                 options={{
                   clientSecret,

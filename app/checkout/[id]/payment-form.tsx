@@ -22,7 +22,9 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "sonner";
 
-
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
+)
 export default function OrderDetailsForm({
   order,
   paypalClientId,
@@ -34,9 +36,7 @@ export default function OrderDetailsForm({
   clientSecret: string | null
 }) {
 
-  const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string
-  )
+
 
   const router = useRouter();
   const {

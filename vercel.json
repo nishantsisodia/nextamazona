@@ -1,0 +1,13 @@
+{
+    "functions": {
+      "api/webhooks/stripe/*.ts": {
+        "maxDuration": 60
+      }
+    },
+    "routes": [
+      {
+        "source": "/api/webhooks/stripe/(.*)",
+        "destination": "/api/webhooks/stripe"
+      }
+    ]
+  }

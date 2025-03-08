@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
 import { sendPurchaseReceipt } from '@/emails'
+import { connectToDatabase } from '@/lib/db'
 import Order from '@/lib/db/models/order.model'
+import User from '@/lib/db/models/user.model'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
 export async function POST(req: NextRequest) {
   try {
+    await connectToDatabase()
     const event = await stripe.webhooks.constructEvent(
       await req.text(),
       req.headers.get('stripe-signature') as string,

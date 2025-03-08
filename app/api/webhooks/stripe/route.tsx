@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { sendPurchaseReceipt } from '@/emails'
 import { connectToDatabase } from '@/lib/db'
 import Order from '@/lib/db/models/order.model'
-import User from '@/lib/db/models/user.model'
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 

@@ -9,6 +9,7 @@ import { FormEvent, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import ProductPrice from '@/components/shared/product/product-price'
 import { SERVER_URL } from '@/lib/constants'
+import { useRouter } from 'next/navigation'
 
 export default function StripeForm({
   priceInCents,
@@ -22,6 +23,7 @@ export default function StripeForm({
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string>()
   const [email, setEmail] = useState<string>()
+  const router = useRouter()
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -35,14 +37,22 @@ export default function StripeForm({
         confirmParams: {
           return_url: `${SERVER_URL}/checkout/${orderId}/stripe-payment-success`,
         },
+        redirect: 'if_required', // Added to handle redirects properly
       })
-      .then(({ error }) => {
-        if (error.type === 'card_error' || error.type === 'validation_error') {
-          setErrorMessage(error.message)
+      .then(({ error, paymentIntent }) => {
+        if (error) {
+          if (error.type === 'card_error' || error.type === 'validation_error') {
+            setErrorMessage(error.message)
+          } else {
+            setErrorMessage('An unknown error occurred')
+          }
+        } else if (paymentIntent?.status === 'succeeded') {
+          router.push(`/account/orders/${orderId}`)
         } else {
-          setErrorMessage('An unknown error occurred')
+          setErrorMessage('Payment not completed')
         }
       })
+      .catch(() => setErrorMessage('Failed to process payment'))
       .finally(() => setIsLoading(false))
   }
 

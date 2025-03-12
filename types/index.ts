@@ -7,8 +7,19 @@ import {
   ProductInputSchema,
   ShippingAddressSchema,
   OrderInputSchema,
+  ReviewInputSchema,
 } from "@/lib/validator";
 import { z } from "zod";
+
+export type IReviewInput = z.infer<typeof ReviewInputSchema>
+export type IReviewDetails = IReviewInput & {
+  _id: string
+  createdAt: string
+  user: {
+    name: string
+  }
+}
+
 
 export type IProductInput = z.infer<typeof ProductInputSchema>;
 
@@ -19,6 +30,12 @@ export type Data = {
     name: string;
     href: string;
   }[];
+  
+  reviews: {
+    title: string
+    rating: number
+    comment: string
+  }[]
 
   carousels: {
     image: string;

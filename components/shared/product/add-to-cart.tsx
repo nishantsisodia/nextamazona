@@ -39,19 +39,10 @@ export default function AddToCart({
           });
         } catch (error) {
           if (error instanceof Error) {
-            toast.error(error.message, {
-              style: {
-                backgroundColor: "#DC2626", // Red background
-                color: "#fff", // White text
-              },
-            });
+            toast.error(error.message)
+
           } else {
-            toast.error("Something went wrong", {
-              style: {
-                backgroundColor: "#DC2626", // Red background
-                color: "#fff", // White text
-              },
-            });
+            toast.error("Something went wrong")
           }
         }
       }}
@@ -85,19 +76,9 @@ export default function AddToCart({
             router.push(`/cart/${itemId}`);
           } catch (error) {
             if (error instanceof Error) {
-              toast.error(error.message, {
-                style: {
-                  backgroundColor: "#DC2626", // Red background
-                  color: "#fff", // White text
-                },
-              });
+              toast.error(error.message)
             } else {
-              toast.error("Something went wrong", {
-                style: {
-                  backgroundColor: "#DC2626", // Red background
-                  color: "#fff", // White text
-                },
-              });
+              toast.error("Something went wrong")
             }
           }
         }}
@@ -113,19 +94,10 @@ export default function AddToCart({
             router.push(`/checkout`);
           } catch (error) {
             if (error instanceof Error) {
-              toast.error(error.message, {
-                style: {
-                  backgroundColor: "#DC2626", // Red background
-                  color: "#fff", // White text
-                },
-              });
+              toast.error(error.message)
+
             } else {
-              toast.error("Something went wrong", {
-                style: {
-                  backgroundColor: "#DC2626", // Red background
-                  color: "#fff", // White text
-                },
-              });
+              toast.error("Something went wrong")
             }
           }
         }}

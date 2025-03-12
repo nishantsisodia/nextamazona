@@ -57,10 +57,6 @@ export default function SignUpForm() {
       if (!res.success) {
         toast.error("Error", {
           description: res.error,
-          style: {
-            backgroundColor: "#DC2626", // Red background
-            color: "#fff", // White text
-          },
         });
         return;
       }
@@ -75,10 +71,6 @@ export default function SignUpForm() {
       }
       toast.error("Error", {
         description: "invalid email and password",
-        style: {
-          backgroundColor: "#DC2626", // Red background
-          color: "#fff", // White text
-        },
       });
     }
   };

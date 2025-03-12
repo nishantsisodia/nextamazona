@@ -79,12 +79,7 @@ export default function ReviewList({
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      toast.error("Error in fetching reviews", {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      toast.error("Error in fetching reviews")
     }
   };
 
@@ -127,20 +122,12 @@ export default function ReviewList({
       path: `/product/${product.slug}`,
     });
     if (!res.success)
-      return toast.error(res.message, {
-        style: {
-          backgroundColor: "red",
-          color: "white",
-        },
-      });
+      return toast.error(res.message)
+
     setOpen(false);
     reload();
-    toast.success(res.message, {
-      style: {
-        backgroundColor: "green",
-        color: "white",
-      },
-    });
+    toast.success(res.message)
+    
   };
 
   const handleOpenForm = async () => {

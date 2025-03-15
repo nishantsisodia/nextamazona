@@ -2,8 +2,10 @@ import { SearchIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { APP_NAME } from "@/lib/constants";
+import { getAllCategories } from "@/lib/actions/product.actions";
 
-const catagories = ['men', 'women', 'kids', 'accessories']
+
+const categories = await getAllCategories()
 
 const Search = () => {
     return (
@@ -17,7 +19,7 @@ const Search = () => {
                     <SelectContent position="popper">
                         <SelectItem value="all">All</SelectItem>
                         {
-                            catagories.map((catagory) => (
+                            categories.map((catagory) => (
                                 <SelectItem key={catagory} value={catagory}>
                                     {catagory}
                                 </SelectItem>

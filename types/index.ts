@@ -22,8 +22,17 @@ export type IReviewDetails = IReviewInput & {
 }
 
 
-export type IProductInput = z.infer<typeof ProductInputSchema>;
+//Order:
 
+export type IProductInput = z.infer<typeof ProductInputSchema>;
+export type IOrderList = IOrderInput & {
+  _id: string
+  user: {
+    name: string
+    email: string
+  }
+  createdAt: Date
+}
 export type Data = {
   users: IUserInput[]
   products: IProductInput[];

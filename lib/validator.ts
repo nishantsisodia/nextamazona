@@ -66,6 +66,9 @@ export const ProductInputSchema = z.object({
     .nonnegative("Stock of reviews must be a non-negative number"),
 });
 
+
+
+
 export const OrderItemSchema = z.object({
   clientId: z.string().min(1, "Client ID is required"),
   product: z.string().min(1, "Product ID is required"),
@@ -73,8 +76,8 @@ export const OrderItemSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   category: z.string().min(1, "Category is required"),
   quantity: z
-    .number()
-    .int()
+  .number()
+  .int()
     .nonnegative("Quantity must be a non-negative number"),
   countInStock: z
     .number()
@@ -147,6 +150,11 @@ export const CartSchema = z.object({
   deliveryDateIndex: z.optional(z.number()),
   expectedDeliveryDate: z.optional(z.date()),
 });
+
+export const ProductUpdateSchema = ProductInputSchema.extend({
+  _id: z.string().optional(),
+})
+
 
 // USER
 const UserName = z

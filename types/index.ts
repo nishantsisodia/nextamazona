@@ -25,6 +25,7 @@ export type IReviewDetails = IReviewInput & {
 //Order:
 
 export type IProductInput = z.infer<typeof ProductInputSchema>;
+
 export type IOrderList = IOrderInput & {
   _id: string
   user: {
@@ -52,7 +53,7 @@ export type Data = {
     url: string;
     title: string;
     buttonCaption: string;
-    isPublished: Boolean;
+    isPublished: boolean;
   }[];
 };
 

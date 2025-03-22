@@ -202,4 +202,10 @@ export const UserSignUpSchema = UserSignInSchema.extend({
   path: ['confirmPassword'],
 })
 
+export const UserUpdateSchema = z.object({
+  _id: MongoId,
+  name: UserName,
+  email: Email,
+  role: UserRole,
+})
 

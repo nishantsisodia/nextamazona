@@ -1,43 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { connectToDatabase } from ".";
-import Product from "./models/product.model";
-import { cwd } from "process";
-import { loadEnvConfig } from "@next/env";
-import data from "@/lib/data";
-import User from "./models/user.model";
-import Review from "./models/review.model";
-import Order from "./models/order.model";
-import { IOrderInput, OrderItem, ShippingAddress } from "@/types";
+import data from '@/lib/data'
+import { connectToDatabase } from '.'
+import User from './models/user.model'
+import Product from './models/product.model'
+import Review from './models/review.model'
+import { cwd } from 'process'
+import { loadEnvConfig } from '@next/env'
+import Order from './models/order.model'
 import {
   calculateFutureDate,
   calculatePastDate,
   generateId,
   round2,
-} from "../utils";
+} from '../utils'
+import WebPage from './models/web-page.model'
+import Setting from './models/setting.model'
+import { OrderItem, IOrderInput, ShippingAddress } from '@/types'
 
-import { AVAILABLE_DELIVERY_DATES } from "../constants";
-
-loadEnvConfig(cwd());
+loadEnvConfig(cwd())
 
 const main = async () => {
   try {
-    const { products, users, reviews } = data;
-    await connectToDatabase(process.env.MONGO_URI);
-    await User.deleteMany();
-    const createdUser = await User.insertMany(users);
+    const { users, products, reviews, webPages, settings } = data
+    await connectToDatabase(process.env.MONGODB_URI)
 
-    await Product.deleteMany();
-    const createdProducts = await Product.insertMany(products);
+    await User.deleteMany()
+    const createdUser = await User.insertMany(users)
 
-    await Review.deleteMany();
-    const rws = [];
+    await Setting.deleteMany()
+    const createdSetting = await Setting.insertMany(settings)
+
+    await WebPage.deleteMany()
+    await WebPage.insertMany(webPages)
+
+    await Product.deleteMany()
+    const createdProducts = await Product.insertMany(
+      products.map((x) => ({ ...x, _id: undefined }))
+    )
+
+    await Review.deleteMany()
+    const rws = []
     for (let i = 0; i < createdProducts.length; i++) {
-      let x = 0;
-      const { ratingDistribution } = createdProducts[i];
+      let x = 0
+      const { ratingDistribution } = createdProducts[i]
       for (let j = 0; j < ratingDistribution.length; j++) {
         for (let k = 0; k < ratingDistribution[j].count; k++) {
-          x++;
+          x++
           rws.push({
             ...reviews.filter((x) => x.rating === j + 1)[
               x % reviews.filter((x) => x.rating === j + 1).length
@@ -47,13 +55,14 @@ const main = async () => {
             user: createdUser[x % createdUser.length]._id,
             updatedAt: Date.now(),
             createdAt: Date.now(),
-          });
+          })
         }
       }
     }
-    const createdReviews = await Review.insertMany(rws);
-    await Order.deleteMany();
-    const orders = [];
+    const createdReviews = await Review.insertMany(rws)
+
+    await Order.deleteMany()
+    const orders = []
     for (let i = 0; i < 200; i++) {
       orders.push(
         await generateOrder(
@@ -61,31 +70,30 @@ const main = async () => {
           createdUser.map((x) => x._id),
           createdProducts.map((x) => x._id)
         )
-      );
+      )
     }
-
     const createdOrders = await Order.insertMany(orders)
-
     console.log({
       createdUser,
       createdProducts,
       createdReviews,
       createdOrders,
-      message: "seeded database successfully",
-    });
-    process.exit(0);
+      createdSetting,
+      message: 'Seeded database successfully',
+    })
+    process.exit(0)
   } catch (error) {
-    console.error(error);
-    throw new Error("Failed to seed Database");
+    console.error(error)
+    throw new Error('Failed to seed database')
   }
-};
+}
 
 const generateOrder = async (
   i: number,
   users: any,
   products: any
 ): Promise<IOrderInput> => {
-  const product1 = await Product.findById(products[i % products.length]);
+  const product1 = await Product.findById(products[i % products.length])
 
   const product2 = await Product.findById(
     products[
@@ -93,16 +101,16 @@ const generateOrder = async (
         ? (i % products.length) - 1
         : (i % products.length) + 1
     ]
-  );
+  )
   const product3 = await Product.findById(
     products[
       i % products.length >= products.length - 2
         ? (i % products.length) - 2
         : (i % products.length) + 2
     ]
-  );
+  )
 
-  if (!product1 || !product2 || !product3) throw new Error("Product not found");
+  if (!product1 || !product2 || !product3) throw new Error('Product not found')
 
   const items = [
     {
@@ -138,7 +146,7 @@ const generateOrder = async (
       price: product3.price,
       countInStock: product1.countInStock,
     },
-  ];
+  ]
 
   const order = {
     user: users[i % users.length],
@@ -159,47 +167,49 @@ const generateOrder = async (
       shippingAddress: data.users[i % users.length].address,
       deliveryDateIndex: i % 2,
     }),
-  };
-  return order;
-};
+  }
+  return order
+}
 
 export const calcDeliveryDateAndPriceForSeed = ({
   items,
   deliveryDateIndex,
 }: {
-  deliveryDateIndex?: number;
-  items: OrderItem[];
-  shippingAddress?: ShippingAddress;
+  deliveryDateIndex?: number
+  items: OrderItem[]
+  shippingAddress?: ShippingAddress
 }) => {
+  const { availableDeliveryDates } = data.settings[0]
   const itemsPrice = round2(
     items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-  );
+  )
 
   const deliveryDate =
-    AVAILABLE_DELIVERY_DATES[
+    availableDeliveryDates[
       deliveryDateIndex === undefined
-        ? AVAILABLE_DELIVERY_DATES.length - 1
+        ? availableDeliveryDates.length - 1
         : deliveryDateIndex
-    ];
+    ]
 
-  const shippingPrice = deliveryDate.shippingPrice;
+  const shippingPrice = deliveryDate.shippingPrice
 
-  const taxPrice = round2(itemsPrice * 0.15);
+  const taxPrice = round2(itemsPrice * 0.15)
   const totalPrice = round2(
     itemsPrice +
       (shippingPrice ? round2(shippingPrice) : 0) +
       (taxPrice ? round2(taxPrice) : 0)
-  );
+  )
   return {
-    AVAILABLE_DELIVERY_DATES,
+    availableDeliveryDates,
     deliveryDateIndex:
       deliveryDateIndex === undefined
-        ? AVAILABLE_DELIVERY_DATES.length - 1
+        ? availableDeliveryDates.length - 1
         : deliveryDateIndex,
     itemsPrice,
     shippingPrice,
     taxPrice,
     totalPrice,
-  };
-};
-main();
+  }
+}
+
+main()

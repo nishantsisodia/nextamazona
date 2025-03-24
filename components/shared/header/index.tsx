@@ -1,16 +1,18 @@
-import { APP_NAME } from "@/lib/constants";
-
+import { getAllCategories } from '@/lib/actions/product.actions'
 import Image from "next/image";
 import Link from "next/link";
 import Menu from "./menu";
 import data from "@/lib/data";
 import Search from "./search";
 import Sidebar from "./sidebar";
-import { getAllCategories } from "@/lib/actions/product.actions";
+import { getSetting } from '@/lib/actions/setting.actions'
+import { getTranslations } from "next-intl/server";
 
 
 export default async function Header() {
     const categories = await getAllCategories()
+    const { site } = await getSetting()
+    const t = await getTranslations()
     return (
         <header className="bg-black text-white">
             <div className="px-2">
@@ -18,9 +20,9 @@ export default async function Header() {
                     <div className="flex items-center">
                         <Link href={"/"} className="header-button flex items-center font-extrabold text-2xl">
                             <div className="h-12 w-auto overflow-hidden">
-                                <Image className="object-cover h-full" src={"/icons/log.gif"} width={60} height={0} alt={`${APP_NAME} logo`} />
+                                <Image className="object-cover h-full" src={site.logo} width={60} height={0}  alt={`${site.name} logo`} />
                             </div>
-                            {APP_NAME}
+                            {site.name}
                         </Link>
                     </div>
 
@@ -38,8 +40,8 @@ export default async function Header() {
                 <div className="flex items-center flex-wrap gap-3 overflow-hidden max-h-[42px]">
 
                     {data.headersMenus.map((menu) => (
-                        <Link href={menu.href} key={menu.href} className="header-button !p-2">
-                            {menu.name}
+                        <Link href={menu.href} key={menu.href}   className='header-button !p-2 '>
+                           {t('Header.' + menu.name)}
                         </Link>
                     ))}
 

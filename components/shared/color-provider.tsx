@@ -11,6 +11,7 @@ export function ColorProvider({
   const { color, updateCssVariables } = useColorStore(theme)
   React.useEffect(() => {
     updateCssVariables()
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme, color])
 

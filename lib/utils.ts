@@ -1,5 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
 import qs from 'query-string'
 
 export function formUrlQuery({
@@ -23,46 +24,45 @@ export function formUrlQuery({
     { skipNull: true }
   )
 }
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export const formatNumberWithDecimal = (num: number): string => {
-  const [int, decimal] = num.toString().split(".");
-  return decimal ? `${int}.${decimal.padEnd(2, "0")}` : int;
-};
+  const [int, decimal] = num.toString().split('.')
+  return decimal ? `${int}.${decimal.padEnd(2, '0')}` : int
+}
+// PROMPT: [ChatGTP] create toSlug ts arrow function that convert text to lowercase, remove non-word,
+// non-whitespace, non-hyphen characters, replace whitespace, trim leading hyphens and trim trailing hyphens
 
 export const toSlug = (text: string): string =>
   text
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "") // Remove non-word, non-whitespace, non-hyphen characters
-    .replace(/\s+/g, "-") // Replace whitespace with hyphens
-    .replace(/^-+|-+$/g, "") // Trim leading and trailing hyphens
-    .replace(/-+/g, "-");
+    .replace(/[^\w\s-]+/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-+/g, '-')
 
-const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
-  currency: "USD",
-  style: "currency",
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  currency: 'USD',
+  style: 'currency',
   minimumFractionDigits: 2,
-});
-
+})
 export function formatCurrency(amount: number) {
-  return CURRENCY_FORMATTER.format(amount);
+  return CURRENCY_FORMATTER.format(amount)
 }
 
-const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
-
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US')
 export function formatNumber(number: number) {
-  return NUMBER_FORMATTER.format(number);
+  return NUMBER_FORMATTER.format(number)
 }
 
 export const round2 = (num: number) =>
-  Math.round((num + Number.EPSILON) * 100) / 100;
+  Math.round((num + Number.EPSILON) * 100) / 100
 
 export const generateId = () =>
-  Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join("");
-
-
+  Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join('')
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatError = (error: any): string => {
@@ -94,14 +94,16 @@ export function calculateFutureDate(days: number) {
   currentDate.setDate(currentDate.getDate() + days)
   return currentDate
 }
-export function getMonthName(yearAndMonth: string) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [year, monthNumber] = yearAndMonth.split('-')
-  const date = new Date()
-  date.setMonth(parseInt(monthNumber) - 1)
-  return new Date().getMonth() === parseInt(monthNumber) - 1
-    ? `${date.toLocaleString('default', { month: 'long' })} (ongoing)`
-    : date.toLocaleString('default', { month: 'long' })
+export function getMonthName(yearMonth: string): string {
+  const [year, month] = yearMonth.split('-').map(Number)
+  const date = new Date(year, month - 1)
+  const monthName = date.toLocaleString('default', { month: 'long' })
+  const now = new Date()
+
+  if (year === now.getFullYear() && month === now.getMonth() + 1) {
+    return `${monthName} Ongoing`
+  }
+  return monthName
 }
 export function calculatePastDate(days: number) {
   const currentDate = new Date()
